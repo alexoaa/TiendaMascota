@@ -1,0 +1,123 @@
+:root {
+    --bordWidth: 1px;
+    --borderColor : #1e272e
+}
+
+.container-citas-dia{
+    /* margin-top: 70px; */
+    width: 100%;
+}
+
+.info-citas-dia {
+    border-bottom: 2px solid black;
+    /* text-align: justify;     */
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 10px 20px;
+    font-size: 1.5em;
+}
+
+.info-citas-dia h1 {
+    border-bottom: 1px solid black;
+    width: 90%;
+    text-align: center;
+    margin: 10px 0 15px;
+    font-size: 1.3em;
+}
+
+.info-citas-dia div {
+    width: 100%;
+    line-height: 35px;
+}
+
+.info-citas-dia div:nth-child(3) {
+    color: #20bf6b;
+}
+.info-citas-dia div:nth-child(4) {
+    color: #0984e3;
+}
+
+
+
+/*! ###########################################  */
+
+.container-timetable-citas-dia {
+    text-align: center;
+}
+
+.timetable-fecha div {
+    padding: 20px 0;
+}
+.timetable-fecha div span {
+    font-size: 1.2em;
+}
+
+.btnTTFecha {
+    width: 20% !important;
+}
+.btnTTFecha:first-of-type {
+    padding-left: 20px;
+}
+.btnTTFecha:last-of-type {
+    padding-right: 20px;
+}
+
+.citas-dia {
+    border-top: var(--bordWidth) solid var(--borderColor);
+    overflow-x: scroll;
+    -webkit-overflow-scrolling-x: touch;
+}
+
+.citas-dia .row {
+    min-height: 5em;
+    display: flex;
+    align-items: center;
+    border-bottom: var(--bordWidth) solid var(--borderColor);
+}
+
+.divHora {
+    border-right: var(--bordWidth) solid var(--borderColor);
+    display: flex;
+    align-items: center;
+    min-height: inherit;
+}
+
+.citaInfoDia {
+    padding: 0 !important;
+    min-height: inherit;
+    display: flex;
+}
+.citaInfoDia-child {
+    padding: 5px !important;
+    /* background-color: antiquewhite; */
+    min-height: inherit;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.citaInfoDia-child:not(.citaInfoDia-child:last-child) {
+    border-right: 1px solid var(--borderColor);
+}
+
+.citaInfoDia span {
+    font-size: .9em;
+    display: block;
+    line-height: normal;
+    width: 100%;
+}
+
+.citaInfoDia-child:active {
+    opacity: 0.9;
+}
+
+.completado {
+    background-color: #20bf6b;
+}
+
+.pendiente {
+    background-color: #0984e3;
+}

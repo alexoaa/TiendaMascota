@@ -1,0 +1,623 @@
+:root {
+  --rad: 0.7rem;
+  --color-dark: #2f2f2f;
+  --color-brand: #57bd84;
+  --font-fam: 'Lato', sans-serif;
+  --btn-color: #1e90ff;
+  --blue-color: #3498db;
+  --border-color: #696868aa;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  /* color: #202020 */
+}
+
+html,
+body {
+  overflow-x: hidden;
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: space-between; */
+}
+
+header {
+  position: relative;
+}
+
+footer {
+  background: red;
+}
+
+a,
+a:visited,
+a:focus,
+a:active,
+a:link {
+  text-decoration: none;
+  outline: 0;
+}
+
+a {
+  color: currentColor;
+  transition: 0.2s ease-in-out;
+}
+
+ul {
+  padding: 0;
+  list-style: none;
+}
+
+img {
+  vertical-align: middle;
+  height: auto;
+  width: 100%;
+}
+/** NAV STYLE */
+
+/** CITAS SUBHEADER */
+
+.subHeader-container {
+  position: relative;
+  width: 100%;
+  padding-top: 1em;
+}
+
+.div-buscador {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 2em 0;
+}
+
+.buscador {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.buscador input,
+.buscador button {
+  height: 3rem;
+  font-size: 1.2rem;
+  /* border: 2px solid var(--color-dark); */
+}
+
+.buscador input[type='search'] {
+  outline: none;
+  width: 70%;
+  padding: 10px 1.2rem;
+  border-radius: var(--rad);
+  appearance: none;
+  transition: all 0.2s var(--bez);
+  transition-property: width, border-radius;
+  position: relative;
+}
+
+.buscador button {
+  display: none;
+  background: #57bd84;
+  border-radius: 0 var(--rad) var(--rad) 0;
+  padding: 0 10px;
+}
+
+.buscador input:not(:placeholder-shown) ~ button {
+  border-radius: 0 var(--rad) var(--rad) 0;
+  border-left: none;
+  display: block;
+  position: relative;
+}
+
+.buscador input:not(:placeholder-shown) {
+  border-radius: var(--rad) 0 0 var(--rad);
+  display: block;
+  position: relative;
+  width: 70%;
+}
+
+#search::-webkit-search-cancel-button {
+  position: relative;
+  right: -10px;
+}
+
+.subHeader-div-btn {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.subHeader-btn {
+  width: 100px;
+  height: 40px;
+}
+
+/** PAGE CITA STYLE */
+
+.form-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  /* margin-bottom: 70px; */
+}
+
+.form-container h1 {
+  min-width: 80%;
+  text-align: center;
+  margin-bottom: 1.1em;
+  padding-bottom: 0.4em;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.5);
+  font-size: 2em;
+  font-weight: bold;
+}
+
+.form-cita {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  position: relative;
+  max-width: 400px;
+  padding: 0 20px;
+}
+
+.cita-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 0 40px 30px;
+  position: relative;
+  max-width: 400px;
+}
+
+.cita-section h2 {
+  font-size: 2em;
+}
+
+/** INPUT STYLE */
+
+.inputBox {
+  position: relative;
+  width: 300px;
+  margin: 0.8em 0;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border: 1px solid rgba(100, 100, 100, 1);
+  border-radius: 5px;
+}
+
+.inputBox input {
+  display: block;
+  padding: 15px;
+  font-size: 1.2em;
+  line-height: 30px;
+  width: 100%;
+  border: none;
+  border-radius: 5px;
+}
+.inputBox input:focus {
+  outline: none;
+}
+
+.inputBox span {
+  position: absolute;
+  left: 10px;
+  padding: 10px;
+  pointer-events: none;
+  font-size: 0.8em;
+  letter-spacing: 0.4px;
+  color: rgba(100, 100, 100, 0.8);
+  text-transform: uppercase;
+  transition: all 0.5s;
+}
+
+.inputBox input:valid ~ span,
+.inputBox input:focus ~ span {
+  color: var(--blue-color);
+  transform: translateX(2px) translateY(-29px);
+  font-size: 0.9em;
+  padding: 0 10px;
+  background: #fff;
+  border-left: 1px solid var(--blue-color);
+  border-right: 1px solid var(--blue-color);
+}
+
+.inputBox div {
+  margin-right: 10px;
+}
+
+.mascotas {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.datos-mascota {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.divParaBtnMascotas .datos-mascota {
+  display: flex;
+  flex-wrap: wrap;
+  border-radius: 5px;
+  position: relative;
+}
+
+.divParaBtnMascotas {
+  position: relative;
+}
+
+.toggle-seg-num {
+  display: none !important;
+}
+
+.agregar-mas {
+  position: relative;
+  width: 300px;
+  display: flex;
+  margin: 0.8em 0;
+}
+
+.agregar-mas button {
+  width: 100%;
+  text-align: center;
+  padding: 0.5em;
+  font-size: 1em;
+  border-radius: 5px;
+  border: 1px solid rgba(100, 100, 100, 1);
+  font-weight: bold;
+}
+
+.btn-agregar-seg-num {
+  background-color: #32ff7e;
+}
+
+.btn-quitar-seg-num {
+  border: none;
+  background-color: #ff3838;
+}
+
+.servicio-select {
+  position: relative;
+  width: 100%;
+  line-height: 20px;
+  padding: 20px;
+  border: 1px solid rgba(100, 100, 100, 1);
+  border-radius: 5px;
+  color: rgba(100, 100, 100, 0.8);
+  text-transform: uppercase;
+  margin: 0.8em 0;
+}
+
+.servicio-select label {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+.inputServOpc {
+  display: none;
+}
+
+.servicio-select label span:first-child {
+  position: absolute;
+  color: var(--blue-color);
+  transform: translateX(2px) translateY(-29px);
+  font-size: 1em;
+  padding: 0 10px;
+  background: #fff;
+  border-left: 1px solid var(--blue-color);
+  border-right: 1px solid var(--blue-color);
+  left: 10px;
+}
+
+.slide {
+  position: relative;
+  clear: both;
+  width: 100%;
+  height: 0px;
+  overflow: hidden;
+  transition: height 0.4s ease;
+  bottom: -20px;
+}
+
+.slide li {
+  border-top: 1px solid rgba(100, 100, 100, 1);
+}
+
+.toggle-servicio-opciones {
+  height: 245px;
+}
+
+.servicio-opc label {
+  display: block;
+  padding: 20px 0;
+}
+
+.servSpanActive {
+  color: var(--blue-color);
+  transform: translateX(2px) translateY(-29px);
+  font-size: 1em;
+  padding: 0 10px;
+  background: #fff;
+  border-left: 1px solid var(--blue-color);
+  border-right: 1px solid var(--blue-color);
+  transition: all 0.5s;
+  left: 0;
+}
+
+.servFontChange {
+  font-weight: bold;
+  color: #202020;
+}
+
+.text-color {
+  color: #202020;
+}
+
+.divisor-citas {
+  margin: 10px 0;
+  font-size: 1.4em;
+}
+
+.faltante {
+  outline: 2px solid #ff3838 !important;
+  border: none !important;
+}
+
+.mensaje-error {
+  color: #ff3838;
+  font-size: 1.1em;
+}
+#btnAgendar {
+  margin: 0;
+}
+
+/*  */
+
+.horario-container {
+  position: relative;
+  width: 300px;
+  line-height: 20px;
+  border: 1px solid rgba(100, 100, 100, 1);
+  border-radius: 5px;
+  color: rgba(100, 100, 100, 0.8);
+  margin: 0.8em 0;
+}
+
+.horario-container label {
+  display: inline-flex;
+  width: 100%;
+  padding: 20px;
+  justify-content: space-between;
+  align-items: center;
+  text-transform: uppercase;
+  font-size: 1em;
+}
+
+.horario-container label span {
+  display: inline-block;
+  margin-left: 5%;
+  width: 85%;
+  overflow: hidden;
+  font-size: inherit;
+  color: #202020;
+}
+
+.horario-container input {
+  position: absolute;
+  opacity: 0;
+  height: 0;
+}
+
+.calendarContainer {
+  position: absolute;
+  display: none;
+  width: 350px;
+  top: 70px;
+  left: -25px;
+  padding: 15px;
+  background-color: #ffffff;
+  border: 1px solid #202020;
+  z-index: 50;
+}
+
+.calendar * {
+  font-size: 1em;
+}
+
+#fechaCita:checked + .calendarContainer {
+  display: block;
+}
+
+#horarioSelect {
+  border: none;
+  font-size: inherit;
+  letter-spacing: 1px;
+  padding: 0 10px;
+}
+
+#horarioSelect:enabled {
+  outline: none;
+}
+
+.errors {
+  min-height: 20px;
+  width: 90%;
+  font-size: 1.1em;
+  text-align: center;
+  color: #ff3838;
+}
+.messageSuccess {
+  line-height: 20px;
+  width: 100%;
+  font-size: 0.9em;
+  text-align: center;
+}
+
+.submit-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.submit-container a {
+  color: var(--blue-color);
+  margin: 10px 0;
+}
+
+.form-divisor {
+  align-items: center;
+  border-bottom: 1px solid #dadde1;
+  display: flex;
+  margin: 20px 16px;
+  text-align: center;
+  height: 1px;
+  width: 150%;
+}
+
+.recov-form-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 80px 20px 0;
+  max-width: 500px;
+  justify-self: center;
+  text-align: center;
+}
+
+.form-cita-recov {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  position: relative;
+  max-width: 500px;
+}
+
+.a-login {
+  color: var(--btn-color);
+  font-weight: bold;
+  letter-spacing: 0.6px;
+  font-size: 1.1em;
+  margin-top: 15px;
+}
+
+.recov-submit-container {
+  width: 100%;
+  border-top: 1px solid rgba(0, 0, 0, 0.5);
+  border-radius: 0 0 8px 8px;
+  padding: 16px;
+  padding-right: 0;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.recov-submit-container a,
+.recov-submit-container button {
+  margin-left: 8px;
+}
+
+.div-recover {
+  margin: 20px 0;
+}
+
+.input-recover {
+  width: 100%;
+}
+
+/** BUTTONS */
+
+.btn-submit {
+  background-color: var(--btn-color) !important;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.2em;
+  line-height: 36px;
+  color: #fff;
+  padding: 10px 30px;
+  cursor: pointer;
+  font-weight: bold;
+  margin: 15px 0;
+}
+
+.btn-aceptar {
+  background-color: var(--btn-color);
+  border: none;
+  border-radius: 6px;
+  font-size: 1em;
+  line-height: 36px;
+  color: #fff;
+  padding: 5px 20px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-cancelar {
+  background-color: #e4e6eb;
+  border: none;
+  border-radius: 6px;
+  font-size: 1em;
+  line-height: 36px;
+  padding: 5px 20px;
+  color: #4b4f56;
+  font-weight: bold;
+  display: inline-block;
+}
+
+.btnBorrarMascota {
+  position: relative;
+  align-self: center;
+  width: 280px;
+  margin: 20px 0;
+  background-color: #e4e6eb;
+  border: none;
+  border-radius: 6px;
+  font-size: 1em;
+  padding: 10px 20px;
+  color: #4b4f56;
+  font-weight: bold;
+  display: inline-block;
+  border: 1px solid;
+}
+
+.btnBorrarMascota:hover {
+  background-color: #c5c6ca;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+/* MODAL CONFIRMACION CITA */
+
+.toggleDisplay {
+  display: none;
+}
+
+.confirmacion-cita-modal {
+  height: 100vh;
+  background-color: wheat;
+}
+
+.confirmacion-form-container {
+  height: inherit;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  padding: 30px;
+}
+
+.confirmacion-form-container > button {
+  display: inline-block;
+}
