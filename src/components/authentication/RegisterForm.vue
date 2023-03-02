@@ -137,6 +137,7 @@ export default {
   name: 'RegisterForm',
   data() {
     return {
+      ip: '192.168.100.22',
       passFieldType: 'password',
       confPassFieldType: 'password',
       registerSchema: {
@@ -153,7 +154,7 @@ export default {
     register(values) {
       console.log(values);
       axios
-        .post('http://localhost:5600/registrar', values)
+        .post(`http://${this.ip}:5600/registrar`, values)
         .then((res) => {
           console.log(res);
         })

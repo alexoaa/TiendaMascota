@@ -18,11 +18,11 @@
           <a href="#" @click.prevent="toggleAuthModal">Iniciar Sesion / Registrarse</a>
         </li>
         <template v-else>
-          <li>
+          <li v-if="userStore.isAdmin">
             <router-link class="px-2" :to="{ name: 'admin' }">Admin</router-link>
           </li>
           <li>
-            <a class="px-2" href="#" @click.prevent="signOut">Logout</a>
+            <a class="px-2" href="#" @click.prevent="signOut">Cerrar sesión</a>
           </li>
         </template>
       </div>

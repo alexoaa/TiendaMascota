@@ -80,14 +80,14 @@
               </ul>
               <button
                 class="inline-flex items-center justify-center p-2 w-32 ml- bg-green-400 hover:bg-green-600 text-gray-800 text-sm font-medium rounded-md"
-                v-if="animal.tipo === 'Adopcion'"
+                v-if="animal.tipo === 'Adopcion' && this.userStore.userLoggedIn === true"
                 @click="adoptar(animal)"
               >
                 <i class="fa-solid fa-paw mr-1"></i>
                 Adoptar
               </button>
               <button
-                v-else
+                v-else-if="this.userStore.userLoggedIn === true"
                 class="inline-flex items-center justify-center p-2 w-32 bg-orange-400 hover:bg-orange-500 text-gray-800 text-sm font-medium rounded-md"
                 @click="comprar(animal)"
               >
@@ -125,6 +125,7 @@ import AdoptarModal from '@/components/AdoptarModal.vue';
 import ComprarModal from '@/components/ComprarModal.vue';
 import { mapStores } from 'pinia';
 import useAuthModalStore from '@/stores/authModal';
+import useUserStore from '@/stores/user';
 
 export default {
   name: 'MainView',
@@ -139,6 +140,7 @@ export default {
       showVenta: false,
       showAdopcion: false,
       animalElegido: {},
+      ip: '192.168.100.22',
     };
   },
   computed: {
@@ -156,14 +158,14 @@ export default {
         precio: item.precio,
       }));
     },
-    ...mapStores(useAuthModalStore),
+    ...mapStores(useAuthModalStore, useUserStore),
   },
   methods: {
     async consultarCatalogo(event) {
       try {
         this.opcion = event.target.dataset.value;
         const response = await axios.get(
-          `http://localhost:5600/consultar-catalogo?especie=${this.opcion}`
+          `http://${this.ip}:5600/consultar-catalogo?especie=${this.opcion}`
         );
         this.catalogo = response.data;
       } catch (error) {
@@ -178,11 +180,11 @@ export default {
         return;
       }
       if (this.showVenta && !this.showAdopcion) {
-        url = `http://localhost:5600/consultar-catalogo?tipo=Venta`;
+        url = `http://${this.ip}:5600/consultar-catalogo?tipo=Venta`;
       } else if (this.showAdopcion && !this.showVenta) {
-        url = `http://localhost:5600/consultar-catalogo?tipo=Adopcion`;
+        url = `http://${this.ip}:5600/consultar-catalogo?tipo=Adopcion`;
       } else if (this.showAdopcion && this.showVenta) {
-        url = `http://localhost:5600/consultar-catalogo?tipo=Adopcion&tipo=Venta`;
+        url = `http://${this.ip}:5600/consultar-catalogo?tipo=Adopcion&tipo=Venta`;
       }
       try {
         const response = await axios.get(url);

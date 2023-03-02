@@ -25,7 +25,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 app.use(express.json()); //To convert data recieved into json
 app.use(express.static(join(__dirname, '../dist'))); // Load files to the nav web so they can access
 app.use(express.urlencoded({ extended: false }));
-// app.use(cors());
+app.use(cors());
 
 const whitelist = ['http://169.254.166.60'];
 const corsOptions = {
@@ -39,7 +39,6 @@ const corsOptions = {
 };
 
 // app.use(cors(corsOptions));
-app.use(cors());
 
 app.use(auth);
 app.use(consultarCatalogo);

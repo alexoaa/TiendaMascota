@@ -70,21 +70,22 @@ import axios from 'axios';
 
 export default {
   name: 'AdoptarModal',
-  date() {
+  data() {
     return {
       visible: false,
       confirmAdopcion: false,
+      ip: '192.168.100.22',
     };
   },
   props: {
     dataAnimal: Object,
   },
   methods: {
-    async adoptar(event) {
+    async adoptar() {
       console.log(this.dataAnimal.id_mascota);
       try {
         const response = await axios.delete(
-          `http://localhost:5600/eliminar-animal?idMascota=${this.dataAnimal.id_mascota}`
+          `http://${this.ip}:5600/eliminar-animal?idMascota=${this.dataAnimal.id_mascota}`
         );
         if (response.status === 200) {
           this.authModalStore.visbleAdoptar = !this.authModalStore.visbleAdoptar;

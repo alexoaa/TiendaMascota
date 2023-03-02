@@ -82,6 +82,7 @@ export default {
   name: 'LoginForm',
   data() {
     return {
+      ip: '192.168.100.22',
       passFieldType: 'password',
       loginSchema: {
         email: 'required|email',
@@ -108,7 +109,7 @@ export default {
       //* Authenticate user and login --- refactoring needed to pass logic to user store file
 
       axios
-        .post('http://localhost:5600/login', values)
+        .post(`http://${this.ip}:5600/login`, values)
         .then((res) => {
           //We'll refresh the page, this also will let us know the authentication state persists across page refreshes
           console.log(res);

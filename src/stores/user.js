@@ -3,6 +3,7 @@ import { defineStore } from 'pinia';
 export default defineStore('user', {
   state: () => ({
     userLoggedIn: false,
+    isAdmin: false,
   }),
   actions: {
     async register(values) {
