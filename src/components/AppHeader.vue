@@ -1,8 +1,6 @@
 <template>
   <!-- class="header-sidebar" -->
-  <header
-    class="bg-stone-400 encoded-sans font-semibold tracking-wide text-neutral-800 relative z-1"
-  >
+  <header class="bg-stone-400 encoded-sans font-semibold tracking-wide text-neutral-800 relative z-1">
     <ul class="flex flex-wrap justify-around items-center h-20">
       <li>
         <router-link
@@ -22,7 +20,7 @@
             <router-link class="px-2" :to="{ name: 'admin' }">Admin</router-link>
           </li>
           <li>
-            <a class="px-2" href="#" @click.prevent="signOut">Cerrar sesión</a>
+            <a class="px-2" href="#" @click.prevent="logOut">Cerrar sesión</a>
           </li>
         </template>
       </div>
@@ -34,12 +32,15 @@
 import { mapStores } from 'pinia';
 import useAuthModalStore from '@/stores/authModal';
 import useUserStore from '@/stores/user';
+import axios from 'axios';
 
 export default {
   name: 'AppHeader',
   components: {},
   data() {
-    return {};
+    return {
+      ip: '192.168.100.22',
+    };
   },
   computed: {
     // ...mapWritableState(useModalStore, ['isOpen']),
@@ -49,8 +50,21 @@ export default {
     toggleAuthModal() {
       this.authModalStore.isOpen = !this.authModalStore.isOpen;
     },
-    signOut() {
-      this.userStore.signout();
+    logOut() {
+      axios
+        .delete(`http://${this.ip}:5600/logout`)
+        .then((req) => {
+          if (req.status === 200) {
+            this.userStore.userLoggedIn = false;
+            this.userStore.isAdmin = false;
+            window.location.reload();
+          } else {
+            console.log(req.data);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     togl() {
       console.log('a');

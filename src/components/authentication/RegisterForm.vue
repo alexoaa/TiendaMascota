@@ -12,9 +12,7 @@
         <!-- Name -->
         <div class="relative my-2 w-full">
           <label class="block text-sky-600 text-lg">Nombre</label>
-          <div
-            class="relative my-1.5 flex items-center w-full px-3 border border-solid border-slate-500 rounded"
-          >
+          <div class="relative my-1.5 flex items-center w-full px-3 border border-solid border-slate-500 rounded">
             <vee-field
               type="text"
               name="name"
@@ -29,9 +27,7 @@
         <!-- Phone -->
         <div class="relative my-2 w-full">
           <label class="block text-sky-600 text-lg">Teléfono</label>
-          <div
-            class="relative my-1.5 flex items-center w-full px-3 border border-solid border-slate-500 rounded"
-          >
+          <div class="relative my-1.5 flex items-center w-full px-3 border border-solid border-slate-500 rounded">
             <vee-field
               type="number"
               name="phone"
@@ -46,9 +42,7 @@
         <!-- Email -->
         <div class="relative my-2 w-full">
           <label class="block text-sky-600 text-lg">Correo electrónico</label>
-          <div
-            class="relative my-1.5 flex items-center w-full px-3 border border-solid border-slate-500 rounded"
-          >
+          <div class="relative my-1.5 flex items-center w-full px-3 border border-solid border-slate-500 rounded">
             <vee-field
               type="email"
               name="email"
@@ -64,9 +58,7 @@
         <div class="relative my-2 w-full">
           <label class="block text-sky-600 text-lg">Contraseña</label>
           <vee-field name="password" :bails="false" v-slot="{ field, errors }">
-            <div
-              class="relative my-1.5 flex items-center w-full px-3 border border-solid border-slate-500 rounded"
-            >
+            <div class="relative my-1.5 flex items-center w-full px-3 border border-solid border-slate-500 rounded">
               <input
                 :type="passFieldType"
                 v-bind="field"
@@ -87,9 +79,7 @@
         <!-- Confirm Password -->
         <div class="relative my-2 w-full">
           <label class="block text-sky-600 text-lg">Confirmar contraseña</label>
-          <div
-            class="relative my-1.5 flex items-center w-full px-3 border border-solid border-slate-500 rounded"
-          >
+          <div class="relative my-1.5 flex items-center w-full px-3 border border-solid border-slate-500 rounded">
             <vee-field
               :type="confPassFieldType"
               name="confirmPassword"
@@ -107,13 +97,7 @@
 
         <!-- ToS -->
         <div class="mb-3 pl-6">
-          <vee-field
-            type="checkbox"
-            name="tos"
-            id="tos"
-            value="1"
-            class="w-4 h-4 float-left -ml-6 mt-1 rounded"
-          />
+          <vee-field type="checkbox" name="tos" id="tos" value="1" class="w-4 h-4 float-left -ml-6 mt-1 rounded" />
           <label for="tos" class="inline-block"
             >Acepto los <a href="#tos" class="text-sky-700">terminos del servicio.</a></label
           >
@@ -123,7 +107,9 @@
         <!-- Register button -->
         <div class="submit-container">
           <button type="submit" id="btnRegistrar" class="btn-submit">Registrarse</button>
-          <div class="text-red-600 py-4"><span>Error</span></div>
+          <div class="text-red-600 py-4" v-if="!this.reg_in_submission">
+            <span>{{ this.reg_alert_msg }}</span>
+          </div>
         </div>
       </vee-form>
     </div>
@@ -132,6 +118,9 @@
 
 <script>
 import axios from 'axios';
+import { mapStores } from 'pinia';
+import useUserStore from '@/stores/user';
+import useAuthModalStore from '@/stores/authModal';
 
 export default {
   name: 'RegisterForm',
@@ -150,16 +139,46 @@ export default {
       },
     };
   },
+  computed: {
+    ...mapStores(useUserStore, useAuthModalStore),
+  },
   methods: {
     register(values) {
-      console.log(values);
       axios
         .post(`http://${this.ip}:5600/registrar`, values)
         .then((res) => {
-          console.log(res);
+          //We'll refresh the page, this also will let us know the authentication state persists across page refreshes
+          // // Auth successfull
+          if (res.status !== 200) return console.log('res.status different that 200 -->' + res.status);
+
+          // AUTOMATIC USER LOGIN AFTER SUCCESSFUL REGISTRATION
+          axios.post(`http://${this.ip}:5600/login`, { email: values.email, password: values.password }).then((res) => {
+            //We'll refresh the page, this also will let us know the authentication state persists across page refreshes
+            // // Auth successfull
+            console.log(res.data);
+
+            // //Instead of reloading, we will close the modal for now
+            this.authModalStore.isOpen = !this.authModalStore.isOpen;
+            // // window.location.reload();
+
+            // //* Updating state and user role state
+            this.userStore.userLoggedIn = true;
+            if (res.data.user.role_U === 'admin') {
+              this.userStore.isAdmin = true;
+            }
+            return;
+          });
         })
+        // Handling error logging in
         .catch((error) => {
           console.log(error);
+          if (error.response.status && error.response.status === 400) {
+            console.log(error.response.data);
+            this.reg_in_submission = false;
+            this.reg_alert_variant = 'bg-red-500';
+            this.reg_alert_msg = error.response.data;
+            return;
+          }
         });
     },
     togglePass() {

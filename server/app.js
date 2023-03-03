@@ -7,6 +7,7 @@ import { fileURLToPath } from 'url';
 // import citas from './routes/citas/nuevaCita.js';
 import consultarCatalogo from './routes/animales/consultarsAnimales.js';
 import auth from './routes/auth/auth.js';
+import admin from './routes/admin/main.js';
 import cors from 'cors';
 
 const app = express();
@@ -42,6 +43,7 @@ const corsOptions = {
 
 app.use(auth);
 app.use(consultarCatalogo);
+app.use(admin);
 
 app.get('/', (req, res) => {
   // res.send('H');

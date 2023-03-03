@@ -159,14 +159,15 @@ export default {
       }));
     },
     ...mapStores(useAuthModalStore, useUserStore),
+    isSelectedClass() {
+      return 2 + 2;
+    },
   },
   methods: {
     async consultarCatalogo(event) {
       try {
         this.opcion = event.target.dataset.value;
-        const response = await axios.get(
-          `http://${this.ip}:5600/consultar-catalogo?especie=${this.opcion}`
-        );
+        const response = await axios.get(`http://${this.ip}:5600/consultar-catalogo?especie=${this.opcion}`);
         this.catalogo = response.data;
       } catch (error) {
         console.log(error);

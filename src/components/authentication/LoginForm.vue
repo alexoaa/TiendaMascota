@@ -7,9 +7,7 @@
         <!-- Email -->
         <div class="relative my-2 w-full">
           <label class="block text-sky-600 text-lg">Correo electronico</label>
-          <div
-            class="relative my-1.5 flex items-center w-full px-3 border border-solid border-slate-500 rounded"
-          >
+          <div class="relative my-1.5 flex items-center w-full px-3 border border-solid border-slate-500 rounded">
             <vee-field
               type="email"
               name="email"
@@ -31,9 +29,7 @@
         <!-- Password -->
         <div class="relative my-2 w-full">
           <label class="block text-sky-600 text-lg">Contraseña</label>
-          <div
-            class="relative my-1.5 flex items-center w-full px-3 border border-solid border-slate-500 rounded"
-          >
+          <div class="relative my-1.5 flex items-center w-full px-3 border border-solid border-slate-500 rounded">
             <vee-field
               :type="passFieldType"
               name="password"
@@ -63,7 +59,9 @@
         <!-- Login button -->
         <div class="submit-container">
           <button type="submit" id="btnIngresar" class="btn-submit">Iniciar sesión</button>
-          <div class="text-red-600 py-4"><span>Error</span></div>
+          <div class="text-red-600 py-4" v-if="!this.reg_in_submission">
+            <span>{{ this.reg_alert_msg }}</span>
+          </div>
           <div class="form-divisor"></div>
           <a href="/password/reset">¿Olvidaste tu contraseña?</a>
         </div>
@@ -107,30 +105,34 @@ export default {
       this.reg_alert_msg = 'Please wait! We are logging you in.';
 
       //* Authenticate user and login --- refactoring needed to pass logic to user store file
-
+      // this.userStore.authenticate(this.ip, values);
       axios
         .post(`http://${this.ip}:5600/login`, values)
         .then((res) => {
           //We'll refresh the page, this also will let us know the authentication state persists across page refreshes
-          console.log(res);
-          this.userStore.authenticate(values);
+          // // Auth successfull
+          console.log(res.data);
 
-          //Instead of reloading, we will close the modal for now
+          // //Instead of reloading, we will close the modal for now
           this.authModalStore.isOpen = !this.authModalStore.isOpen;
-          console.log(this.authModalStore.isOpen);
-          // window.location.reload();
+          // // window.location.reload();
+
+          // //* Updating state and user role state
+          this.userStore.userLoggedIn = true;
+          if (res.data.user.role_U === 'admin') {
+            this.userStore.isAdmin = true;
+          }
+          return;
         })
         // Handling error logging in
         .catch((error) => {
-          this.reg_in_submission = false;
-          this.reg_alert_variant = 'bg-red-500';
-          if (error) {
-            console.log(error);
-            this.reg_alert_msg = 'There is not an account with that email.';
+          if (error.response.status === 401) {
+            console.log(error.response.data);
+            this.reg_in_submission = false;
+            this.reg_alert_variant = 'bg-red-500';
+            this.reg_alert_msg = error.response.data;
             return;
           }
-          this.reg_alert_msg = 'Invalid login details.';
-          return;
         });
     },
     togglePass() {

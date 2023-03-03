@@ -7,7 +7,7 @@ const router = Router();
 
 import bcrypt from 'bcrypt';
 import passport from 'passport';
-import flash from 'express-flash';
+// import flash from 'express-flash';
 import session from 'express-session';
 import methodOverride from 'method-override';
 import { body, validationResult } from 'express-validator';
@@ -19,7 +19,8 @@ import initializePassport from './passport-config.js';
 initializePassport(passport);
 
 //* Middleware
-router.use(flash());
+// router.use(flash());
+//?Para production no se ocupa el process.env.SESSION_SECRET
 router.use(
   session({
     secret: 'secret' /*process.env.SESSION_SECRET*/,
@@ -42,24 +43,24 @@ router.use(methodOverride('_method'));
 // });
 
 //* Se quitara un middleware "checkNotAuthenticated" antes de "checkLogInData" pero despues se pondrá
-router.post('/login', checkLogInData, function (req, res, next) {
+router.post('/login', checkNotAuthenticated, checkLogInData, function (req, res, next) {
   passport.authenticate('local', function (err, user, info) {
     if (err) {
       return next(err);
     }
-    // Redirect if it fails
+    // Se notifica al cliente si algo falló o si un hay objeto user de PassportJS
     if (!user) {
-      // req.flash('message', info.message);
-      console.log('No user');
-      return res.status(500).send('Ha ocurrido un error.');
+      console.log(info);
+      return res.status(401).send(info.message);
     }
     req.logIn(user, function (err) {
       if (err) {
         return next(err);
       }
-      // Redirect if it succeeds
+      // Enviamos datos del user si se pudo autenticar
       // console.log(user);
-      return res.status(200).send('Login exitoso');
+      delete user.contrasena_U;
+      return res.status(200).json({ user }); //!
     });
   })(req, res, next);
 });
@@ -69,11 +70,10 @@ router.post(
   body('email').isEmail(),
   body('password').isLength({ min: 8 }),
   body('phone').isMobilePhone(['es-MX']),
-  //   checkNotAuthenticated,
+  checkNotAuthenticated,
   async (req, res) => {
     try {
       const { name, phone, email, password, confirmPassword } = req.body;
-      console.log(req.body);
       //* Comprueba si hay datos mandados por el user
       if (Object.keys(req.body).length === 0) {
         return res.status(400).send('Faltan campos obligatorios');
@@ -91,45 +91,44 @@ router.post(
       }
 
       //* Comprueba si existe un user con el email
-      const query = 'SELECT COUNT(email_CL) FROM cliente WHERE email_CL = ?';
-      mysqlConnection.query(query, [email], (err, results, fields) => {
+      const query = 'SELECT COUNT(email_U) FROM usuario WHERE email_U = ?';
+      mysqlConnection.query(query, [email], (err, results) => {
         if (err) return console.log(err);
         //     //* Si no existe un user con el email, crea un nuevo user
-        if (results[0]['COUNT(email_CL)'] > 0 !== true) {
+        if (results[0]['COUNT(email_U)'] > 0 !== true) {
           const id = Date.now().toString();
-          // const role = 'user';
+          const role = 'user';
 
           // !CAMBIO DE QUERY, SE QUITO CALL A PROCEDURE Y SE AGREGO LA QUERY DIRECTA PARA PROBAR EN DEPLOYMENT
-
           //       // const query = 'CALL registrarNuevoUsuario(?,?,?,?,?,?,?);';
+
           const query =
-            'INSERT INTO cliente (id_CL, nombre_CL, email_CL, telefono_CL, contrasena_CL) VALUES (?,?,?,?,?);';
-          //       //* Añade el nuevo user a la DB y redirije a /login
-          mysqlConnection.query(
-            query,
-            [id, name, email, phone, hashedPass],
-            (err, results, fields) => {
-              if (err) return console.log({ status: 'error', log: err });
-              res.status(200).send('Registro exitoso');
+            'INSERT INTO usuario (id_U, role_U, nombre_U, email_U, telefono_U, contrasena_U) VALUES (?,?,?,?,?,?);';
+          //* Añade el nuevo user a la DB y notifica el regitro fue exitoso
+          mysqlConnection.query(query, [id, role, name, email, phone, hashedPass], (err) => {
+            if (err) {
+              console.log({ status: 'error', log: err });
+              return res.status(500).send('Ya existe una cuenta con ese correo.');
             }
-          );
+            return res.status(200).send('Registro exitoso');
+          });
         } else {
           //* Si existe un user con el email, se avisa al user
           return res.status(400).send('Ya existe una cuenta con ese correo.');
         }
       });
     } catch {
-      res.status(500).send('Ha ocurrido un error.');
+      return res.status(500).send('Ha ocurrido un error.');
     }
   }
 );
 
-// router.delete('/logout', checkAuthenticated, (req, res) => {
-//   req.logOut((err) => {
-//     if (err) return next(err);
-//   });
-//   res.redirect('/login');
-// });
+router.delete('/logout', checkAuthenticated, (req, res) => {
+  req.logOut((err) => {
+    if (err) return res.status(500).send(err);
+  });
+  return res.status(200);
+});
 
 // router.use('/password', checkNotAuthenticated, passwordReset);
 
@@ -138,12 +137,12 @@ function checkAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
     return next();
   }
-  return res.redirect('/login');
+  return res.status(501).send('No autenticado.');
 }
 
 function checkNotAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
-    return res.redirect('/');
+    return res.status(200).send('Ya autenticado.');
   }
   return next();
 }
@@ -151,7 +150,7 @@ function checkNotAuthenticated(req, res, next) {
 function checkLogInData(req, res, next) {
   const { email, password } = req.body;
   if (email === '' || password === '') {
-    return res.status(400).send('Se necesitan credenciales para acceder.');
+    return res.status(400).json({ error: 'Se necesitan credenciales para acceder.' });
   } else {
     return next();
   }

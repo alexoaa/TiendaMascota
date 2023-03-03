@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import axios from 'axios';
 
 export default defineStore('user', {
   state: () => ({
@@ -16,12 +17,19 @@ export default defineStore('user', {
       //* Updating state
       this.userLoggedIn = true;
     },
-    async authenticate(values) {
-      //* Authenticate user and login --- refactoring needed to pass logic to this file
-      // await authenticateUser(values.email, values.password);
-      console.log(values);
-      //* Updating state
-      this.userLoggedIn = true;
+    async authenticate(ip, values) {
+      //* Authenticate user and login -- - refactoring needed to pass logic to this file
+      // await axios
+      //   .post(`http://${ip}:5600/login`, values)
+      //   .then((res) => {
+      //     //We'll refresh the page, this also will let us know the authentication state persists across page refreshes
+      //     console.log(res);
+      //     return res;
+      //   })
+      //   // Handling error logging in
+      //   .catch((error) => {
+      //     return { error };
+      //   });
     },
     async signout() {
       // await signOutUser();
