@@ -126,7 +126,9 @@ export default {
   name: 'RegisterForm',
   data() {
     return {
-      ip: '192.168.100.22',
+      // ip: '192.168.100.22',
+      ip: '192.168.184.252',
+      // ip: 'localhost',
       passFieldType: 'password',
       confPassFieldType: 'password',
       registerSchema: {
@@ -150,7 +152,8 @@ export default {
           //We'll refresh the page, this also will let us know the authentication state persists across page refreshes
           // // Auth successfull
           if (res.status !== 200) return console.log('res.status different that 200 -->' + res.status);
-
+          console.log(res.data);
+          // this.userStore.idUser = res.data.userToken._id;
           // AUTOMATIC USER LOGIN AFTER SUCCESSFUL REGISTRATION
           axios.post(`http://${this.ip}:5600/login`, { email: values.email, password: values.password }).then((res) => {
             //We'll refresh the page, this also will let us know the authentication state persists across page refreshes

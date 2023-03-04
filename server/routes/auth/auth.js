@@ -7,12 +7,15 @@ const router = Router();
 
 import bcrypt from 'bcrypt';
 import passport from 'passport';
+import jwt from 'jsonwebtoken';
 // import flash from 'express-flash';
-import session from 'express-session';
+// import session from 'express-session';
 import methodOverride from 'method-override';
 import { body, validationResult } from 'express-validator';
 import { mysqlConnection } from '../../database.js';
-// import index from '../index.js';
+
+import admin from '../admin/main.js';
+
 // import passwordReset from './passwordReset.js';
 
 import initializePassport from './passport-config.js';
@@ -21,19 +24,46 @@ initializePassport(passport);
 //* Middleware
 // router.use(flash());
 //?Para production no se ocupa el process.env.SESSION_SECRET
-router.use(
-  session({
-    secret: 'secret' /*process.env.SESSION_SECRET*/,
-    resave: false,
-    saveUninitialized: false,
-  })
-);
+// router.use(
+//   session({
+//     secret: 'secret' /*process.env.SESSION_SECRET*/,
+//     resave: false,
+//     saveUninitialized: false,
+//   })
+// );
 router.use(passport.initialize());
-router.use(passport.session());
+// router.use(passport.session());
 router.use(methodOverride('_method'));
 
 //* Routes
-// router.get('/', checkAuthenticated, index);
+// router.get('/activity-log', passport.authenticate('jwt', { session: false }), checkAuthenticated, admin);
+// router.get('/activity-log', checkAuthenticated, admin);
+// router.get('/activity-log', admin);
+
+//post al activity log
+router.post('/activity-log', function (req, res) {
+  try {
+    const idRegistro = Date.now().toString();
+    const fechaHoraActual = new Date();
+    const fechaTexto = fechaHoraActual.toLocaleDateString();
+    const horaTexto = fechaHoraActual.toLocaleTimeString();
+    const fechaTextoParse = fechaTexto.split('/');
+    const fecha = `${fechaTextoParse[2]}-${fechaTextoParse[0]}-${fechaTextoParse[1]} ${horaTexto}`;
+    let accion = '';
+    if (req.body.tipo === 'adoptar') accion = 'Ha adoptado a ';
+    else accion = ' Ha comprado a ';
+    console.log(req.body);
+    const query = `INSERT INTO registro VALUES (?, ?, ?, ?, ?);`;
+    mysqlConnection.query(query, [idRegistro, fecha, req.body.idUser, accion, req.body.idMascota], (err) => {
+      if (err) return console.log(err);
+      console.log('registro exitoso');
+      return res.status(200).send('Registro exitoso');
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send(error);
+  }
+});
 
 // router.get('/login', checkNotAuthenticated, (req, res) => {
 //     res.json({'login.ejs'});
@@ -44,23 +74,31 @@ router.use(methodOverride('_method'));
 
 //* Se quitara un middleware "checkNotAuthenticated" antes de "checkLogInData" pero despues se pondrá
 router.post('/login', checkNotAuthenticated, checkLogInData, function (req, res, next) {
-  passport.authenticate('local', function (err, user, info) {
+  passport.authenticate('local', async function (err, user, info) {
     if (err) {
       return next(err);
     }
     // Se notifica al cliente si algo falló o si un hay objeto user de PassportJS
     if (!user) {
       console.log(info);
-      return res.status(401).send(info.message);
+      return res.status(401).send('Error' + info.message);
     }
-    req.logIn(user, function (err) {
+    req.logIn(user, { session: false }, function (err) {
       if (err) {
         return next(err);
       }
-      // Enviamos datos del user si se pudo autenticar
-      // console.log(user);
-      delete user.contrasena_U;
-      return res.status(200).json({ user }); //!
+      // Se crea un JWT para encriptar los datos
+      const body = { id: user.id_U, email: user.email };
+      const token = jwt.sign({ user: body }, 'JWT_KEY');
+      // Enviamos datos del user si se pudo autenticar junto con el token
+      console.log(user);
+      const userToken = {
+        _id: user.id_U,
+        email: user.email_U,
+        role_U: user.role_U,
+        token,
+      };
+      return res.status(200).json({ userToken }); //!
     });
   })(req, res, next);
 });

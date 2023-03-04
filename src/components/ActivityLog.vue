@@ -26,10 +26,8 @@
           </div>
           <div class="item-registro w-[34rem]">
             Accion:
-            <span class="font-medium"
-              >{{ registro.accion }} Lorem ipsum dolor sit, amet consectetur adipisicing elit. Reiciendis doloribus lore
-              aspernatur {{ registro.idMascota }}_{{ registro.nombreMascota }}</span
-            >
+            <span class="font-medium">{{ registro.accion }} {{ registro.idMascota }}_</span>
+            <!-- {{ registro.nombreMascota }} -->
           </div>
         </div>
       </div>
@@ -46,27 +44,32 @@ export default {
   name: 'ActivityLog',
   data() {
     return {
-      ip: '192.168.100.22',
+      // ip: '192.168.100.22',
+      ip: '192.168.184.252',
+      // ip: 'localhost',
       registros: [],
     };
   },
   computed: {
     ...mapStores(useUserStore),
   },
-  beforeMount() {
+  async beforeMount() {
     axios
       .get(`http://${this.ip}:5600/activity-log`)
       .then((res) => {
+        console.log(res.data);
+
         res.data.forEach((registro) => {
+          console.log(registro);
           this.registros.push({
-            idRegistro: registro.IdRegistro,
-            fecha: registro.Fecha,
-            hora: registro.Hora,
-            idUser: registro.IdUsuario,
-            nombreUser: registro.Usuario,
-            accion: registro.Accion,
+            idRegistro: registro.ID_REGISTRO,
+            fecha: registro.FECHA,
+            hora: registro.HORA,
+            idUser: registro.ID_USUARIO,
+            nombreUser: registro.NOMBRE_USUARIO,
+            accion: registro.ACCION,
             idMascota: registro.IdMascota,
-            nombreMascota: registro.Mascota,
+            // nombreMascota: registro.Mascota,
           });
         });
         console.log(this.registros);

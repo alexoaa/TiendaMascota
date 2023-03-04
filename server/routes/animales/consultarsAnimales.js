@@ -14,7 +14,7 @@ router.get('/consultar-catalogo', (req, res) => {
   console.log(req.query);
   if (req.query.especie === 'Otro') {
     const query = 'SELECT * FROM mascota WHERE especie NOT IN (?, ?);';
-    mysqlConnection.query(query, ['Perro', 'Gato'], (err, results, fields) => {
+    mysqlConnection.query(query, ['Perro', 'Gato'], (err, results) => {
       if (err) {
         return res.status(400).send({ status: 'error', log: err });
       }
@@ -24,7 +24,7 @@ router.get('/consultar-catalogo', (req, res) => {
     });
   } else {
     const query = 'SELECT * FROM mascota WHERE especie = ?;';
-    mysqlConnection.query(query, [req.query.especie], (err, results, fields) => {
+    mysqlConnection.query(query, [req.query.especie], (err, results) => {
       if (err) {
         return res.status(400).send({ status: 'error', log: err });
       }

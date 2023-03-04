@@ -80,7 +80,8 @@ export default {
   name: 'LoginForm',
   data() {
     return {
-      ip: '192.168.100.22',
+      ip: '192.168.184.252',
+      // ip: 'localhost',
       passFieldType: 'password',
       loginSchema: {
         email: 'required|email',
@@ -112,27 +113,25 @@ export default {
           //We'll refresh the page, this also will let us know the authentication state persists across page refreshes
           // // Auth successfull
           console.log(res.data);
-
+          this.userStore.idUser = res.data.userToken._id;
           // //Instead of reloading, we will close the modal for now
           this.authModalStore.isOpen = !this.authModalStore.isOpen;
           // // window.location.reload();
 
           // //* Updating state and user role state
           this.userStore.userLoggedIn = true;
-          if (res.data.user.role_U === 'admin') {
+          if (res.data.userToken.role_U === 'admin') {
             this.userStore.isAdmin = true;
           }
           return;
         })
         // Handling error logging in
         .catch((error) => {
-          if (error.response.status === 401) {
-            console.log(error.response.data);
-            this.reg_in_submission = false;
-            this.reg_alert_variant = 'bg-red-500';
-            this.reg_alert_msg = error.response.data;
-            return;
-          }
+          console.log(error.response.data);
+          this.reg_in_submission = false;
+          this.reg_alert_variant = 'bg-red-500';
+          this.reg_alert_msg = error.response.data;
+          return;
         });
     },
     togglePass() {

@@ -5,6 +5,7 @@ export default defineStore('user', {
   state: () => ({
     userLoggedIn: false,
     isAdmin: false,
+    idUser: '',
   }),
   actions: {
     async register(values) {

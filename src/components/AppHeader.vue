@@ -39,7 +39,9 @@ export default {
   components: {},
   data() {
     return {
-      ip: '192.168.100.22',
+      // ip: '192.168.100.22',
+      ip: '192.168.184.252',
+      // ip: 'localhost',
     };
   },
   computed: {
@@ -51,20 +53,21 @@ export default {
       this.authModalStore.isOpen = !this.authModalStore.isOpen;
     },
     logOut() {
-      axios
-        .delete(`http://${this.ip}:5600/logout`)
-        .then((req) => {
-          if (req.status === 200) {
-            this.userStore.userLoggedIn = false;
-            this.userStore.isAdmin = false;
-            window.location.reload();
-          } else {
-            console.log(req.data);
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      window.location.reload();
+      // axios
+      //   .delete(`http://${this.ip}:5600/logout`)
+      //   .then((req) => {
+      //     if (req.status === 200) {
+      //       this.userStore.userLoggedIn = false;
+      //       this.userStore.isAdmin = false;
+      //       window.location.reload();
+      //     } else {
+      //       console.log(req.data);
+      //     }
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
+      //   });
     },
     togl() {
       console.log('a');

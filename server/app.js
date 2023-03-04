@@ -49,9 +49,9 @@ app.get('/', (req, res) => {
   // res.send('H');
   res.sendFile(join(__dirname, 'dist', 'index.html'));
 });
-// app.use('*', (req, res) => {
-//     res.status(404).render("404Pagina.ejs");
-// })
+app.use('*', (req, res) => {
+  res.redirect('/');
+});
 
 //* Starting the server
 app.listen(port || 5600, () => {

@@ -1,8 +1,6 @@
 <template>
   <div class="fixed z-10 inset-0 overflow-y-auto modal" id="modal">
-    <div
-      class="flex items-center justify-center min-h-screen pt-4 px-4 pb-16 text-center sm:block sm:p-0"
-    >
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-16 text-center sm:block sm:p-0">
       <div class="fixed inset-0 transition-opacity">
         <div class="absolute inset-0 bg-gray-800 opacity-75"></div>
       </div>
@@ -66,6 +64,7 @@
 <script>
 import { mapStores } from 'pinia';
 import useAuthModalStore from '@/stores/authModal';
+import useUserStore from '@/stores/user';
 import axios from 'axios';
 
 export default {
@@ -74,7 +73,9 @@ export default {
     return {
       visible: false,
       confirmAdopcion: false,
-      ip: '192.168.100.22',
+      // ip: '192.168.100.22',
+      ip: '192.168.184.252',
+      // ip: 'localhost',
     };
   },
   props: {
@@ -82,12 +83,18 @@ export default {
   },
   methods: {
     async adoptar() {
-      console.log(this.dataAnimal.id_mascota);
+      console.log(this.dataAnimal);
       try {
+        const values = {
+          idMascota: this.dataAnimal.id_mascota,
+          idUser: this.userStore.idUser,
+          tipo: this.dataAnimal.tipo,
+        };
+        const response_AL = await axios.post(`http://${this.ip}:5600/activity-log`, values);
         const response = await axios.delete(
           `http://${this.ip}:5600/eliminar-animal?idMascota=${this.dataAnimal.id_mascota}`
         );
-        if (response.status === 200) {
+        if (response.status === 200 && response_AL.status === 200) {
           this.authModalStore.visbleAdoptar = !this.authModalStore.visbleAdoptar;
         }
         console.log(response);
@@ -97,7 +104,7 @@ export default {
     },
   },
   computed: {
-    ...mapStores(useAuthModalStore),
+    ...mapStores(useAuthModalStore, useUserStore),
   },
 };
 </script>

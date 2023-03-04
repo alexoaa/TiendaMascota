@@ -140,7 +140,9 @@ export default {
       showVenta: false,
       showAdopcion: false,
       animalElegido: {},
-      ip: '192.168.100.22',
+      // ip: '192.168.100.22',
+      // ip: 'localhost',
+      ip: '192.168.184.252',
     };
   },
   computed: {

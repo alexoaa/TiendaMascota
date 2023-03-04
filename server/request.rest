@@ -1,0 +1,79 @@
+POST http://localhost:5600/login
+Content-Type: application/json
+
+{
+    "email": "alex00yt@gmail.com",
+    "password": "123456789"
+}
+
+####
+
+GET http://localhost:5600/activity-log
+Content-Type: application/json
+
+{
+    "nombreCliente" : "Santi", 
+    "numeroTelefono" : 5510485859,
+    "segundoNumTel" : 5554301209,
+    "nombreMascota" : "Mora",
+    "razaMascota" : "Mestizo",
+    "servicio" : "Baño",
+    "precioServicio" : "200",
+    "fechaCita" : "2022-09-24",
+    "horaCita" : "18:30:00"
+}
+
+####
+
+GET http://localhost:5500/admin/consulta-cita
+Content-Type: application/json
+
+####
+
+POST http://localhost:5500/registrar
+Content-Type: application/json
+
+{
+    "nombre" : "Alejandro", 
+    "apellido" : "Olvera",
+    "telefono" : "5510485859",
+    "email" : "alex00yt@gmail.com",
+    "password" : "alex123",
+    "passwordConf" : "alex123"
+}
+
+####
+
+POST http://localhost:5500/login
+Content-Type: application/json
+
+{
+    "email" : "alex00yt@gmail.com",
+    "password" : "alex123"
+}
+
+####
+
+POST http://localhost:5500/registrar
+Content-Type: application/json
+
+{
+    "nombre" : "Santiago", 
+    "telefono" : "5654789623",
+    "email" : "santiolvera03@gmail.com",
+    "password" : "santi123",
+    "passwordConf" : "santi123"
+}
+
+####
+
+POST http://localhost:5500/login
+Content-Type: application/json
+
+{
+    "email" : "santiolvera03@gmail.com",
+    "password" : "santi123"
+}
+
+###
+POST http://localhost:5500/logout?_method=DELETE

@@ -10,12 +10,12 @@
           <li>
             <a href="#" @click.prevent="this.openAdminSection = 'ActivityLog'"> Registro de actividades </a>
           </li>
-          <li>
+          <!-- <li>
             <a href="#" @click.prevent="this.openAdminSection = 'ManageMascota'"> Añadir mascota </a>
           </li>
           <li>
             <a href="#" @click.prevent="this.openAdminSection = 'ManageMascota'"> Manejar </a>
-          </li>
+          </li> -->
         </ul>
       </aside>
       <component :is="openAdminSection"></component>

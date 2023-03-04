@@ -8,5 +8,6 @@ export default defineStore('authModal', {
     isOpen: false,
     visbleComprar: false,
     visibleAdoptar: false,
+    ip: 'localhost',
   }),
 });
