@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
-import axios from 'axios';
 import { appConfig } from '@/includes/appConfig';
+import axios from 'axios';
 
 export default defineStore('user', {
   state: () => ({
@@ -10,14 +10,13 @@ export default defineStore('user', {
   }),
   actions: {
     async register(values) {
-      //* Authenticating
+      const response = await axios.post(`http://${appConfig.ipServer}/registrar`, values);
+      //* If there is an error registering the acc, return the response
+      if (response.status && response.status === 400) return response;
 
-      //*Adding data
-
-      //* Function to log the userCredentials since it's async
-
-      //* Updating state
-      this.userLoggedIn = true;
+      //* Automatic user login after successful registration
+      const logInResponse = await this.authenticate({ email: values.email, password: values.password });
+      return logInResponse;
     },
     async authenticate(values) {
       //* Authenticate user and login -- - refactoring needed to pass logic to this file

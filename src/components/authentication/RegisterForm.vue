@@ -117,7 +117,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 import { mapStores } from 'pinia';
 import useUserStore from '@/stores/user';
 import useAuthModalStore from '@/stores/authModal';
@@ -126,9 +125,6 @@ export default {
   name: 'RegisterForm',
   data() {
     return {
-      // ip: '192.168.100.22',
-      ip: '192.168.184.252',
-      // ip: 'localhost',
       passFieldType: 'password',
       confPassFieldType: 'password',
       registerSchema: {
@@ -145,44 +141,32 @@ export default {
     ...mapStores(useUserStore, useAuthModalStore),
   },
   methods: {
-    register(values) {
-      axios
-        .post(`http://${this.ip}:5600/registrar`, values)
-        .then((res) => {
-          //We'll refresh the page, this also will let us know the authentication state persists across page refreshes
-          // // Auth successfull
-          if (res.status !== 200) return console.log('res.status different that 200 -->' + res.status);
-          console.log(res.data);
-          // this.userStore.idUser = res.data.userToken._id;
-          // AUTOMATIC USER LOGIN AFTER SUCCESSFUL REGISTRATION
-          axios.post(`http://${this.ip}:5600/login`, { email: values.email, password: values.password }).then((res) => {
-            //We'll refresh the page, this also will let us know the authentication state persists across page refreshes
-            // // Auth successfull
-            console.log(res.data);
+    async register(values) {
+      // Letting the user know we are registerong and logging them in.
+      this.reg_in_submission = true;
+      this.reg_show_alert = true;
+      this.reg_alert_variant = 'bg-blue-500';
+      this.reg_alert_msg = 'Por favor espera mientras te creamos tu cuenta.';
 
-            // //Instead of reloading, we will close the modal for now
-            this.authModalStore.isOpen = !this.authModalStore.isOpen;
-            // // window.location.reload();
+      // Register and authenticate user
+      try {
+        const response = await this.userStore.register(values);
 
-            // //* Updating state and user role state
-            this.userStore.userLoggedIn = true;
-            if (res.data.user.role_U === 'admin') {
-              this.userStore.isAdmin = true;
-            }
-            return;
-          });
-        })
-        // Handling error logging in
-        .catch((error) => {
-          console.log(error);
-          if (error.response.status && error.response.status === 400) {
-            console.log(error.response.data);
-            this.reg_in_submission = false;
-            this.reg_alert_variant = 'bg-red-500';
-            this.reg_alert_msg = error.response.data;
-            return;
-          }
-        });
+        // Instead of reloading, we will close the modal for now
+        this.authModalStore.isOpen = !this.authModalStore.isOpen;
+
+        //?Reload to close the modal
+        //?window.location.reload();
+
+        console.log(response);
+      } catch (error) {
+        // Handling error registering and logging in
+        console.log(error);
+        this.reg_in_submission = false;
+        this.reg_alert_variant = 'bg-red-500';
+        this.reg_alert_msg = error.response.data;
+        return;
+      }
     },
     togglePass() {
       this.passFieldType = this.passFieldType === 'password' ? 'text' : 'password';
