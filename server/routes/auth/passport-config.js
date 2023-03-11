@@ -1,10 +1,12 @@
 import LocalStrategy from 'passport-local';
 import { Strategy as JWTStrategy, ExtractJwt } from 'passport-jwt';
+import bcrypt from 'bcrypt';
+import { mysqlConnection } from '../../database.js';
 
 LocalStrategy.Strategy;
 
-import bcrypt from 'bcrypt';
-import { mysqlConnection } from '../../database.js';
+const JWT_SECRET = process.env.JWT_SECRET || 'your_secret_key';
+const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET || 'your_refresh_secret_key';
 
 function initialize(passport) {
   const authenticateUser = async (email, password, done) => {
@@ -16,12 +18,10 @@ function initialize(passport) {
         return done(err);
       }
       if (!results.length) {
-        // console.log('El correo es incorrecto.');
         return done(null, false, { message: 'No existe un usario con este correo.' });
       }
       //* Comprobar si las passwords son las mismas con bcrypt para encriptar ya que en la DB esta encriptada
       if (!(await bcrypt.compare(password, results[0]['contrasena_U']))) {
-        // console.log('La contraseña es incorrecta.');
         return done(null, false, { message: 'El correo/contraseña es incorrecto.' });
       }
       //* Si las credenciales coinciden, se accede
@@ -29,6 +29,7 @@ function initialize(passport) {
     });
   };
 
+  //? ******* USANDO LOCAL STRATEGY **********
   //*Usamos local strategy y le pasamos los campos como objeto por las cuales se autenticara
   //* El segundo parametro es una funcion para autenticar el user en la DB
   passport.use(new LocalStrategy({ usernameField: 'email' }, authenticateUser));
@@ -36,40 +37,28 @@ function initialize(passport) {
   //? ******* USANDO JWT STRATEGY **********
   const jwtOptions = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: 'JWT_KEY', //process.env.JWT_SECRET
+    secretOrKey: process.env.JWT_SECRET,
   };
 
   passport.use(
     new JWTStrategy(jwtOptions, async (payload, done) => {
       try {
         // Buscar al usuario en la base de datos utilizando el ID del usuario almacenado en el token
-        return console.log(payload);
+        console.log(payload);
 
-        const query = 'SELECT * FROM usuario WHERE email_U = ?';
-        mysqlConnection.query(query, [email], async (err, results) => {
+        const query = 'SELECT * FROM usuario WHERE id_U = ?';
+        mysqlConnection.query(query, [payload.user.id], async (err, results) => {
           if (err) {
             console.log(err);
             return done(err);
           }
           if (!results.length) {
-            // console.log('El correo es incorrecto.');
-            return done(null, false, { message: 'No existe un usario con este correo.' });
-          }
-          //* Comprobar si las passwords son las mismas con bcrypt para encriptar ya que en la DB esta encriptada
-          if (!(await bcrypt.compare(password, results[0]['contrasena_U']))) {
-            // console.log('La contraseña es incorrecta.');
-            return done(null, false, { message: 'El correo/contraseña es incorrecto.' });
+            console.log('No existe un usario con este correo.');
+            return done(null, false, { message: 'Usuario no encontrado' });
           }
           //* Si las credenciales coinciden, se accede
           return done(null, results[0]);
         });
-
-        // Si el usuario no existe, devolver un mensaje de error
-        if (!user) {
-          return done(null, false, { message: 'Usuario no encontrado' });
-        }
-        // Si el usuario existe, devolver el usuario
-        return done(null, user);
       } catch (error) {
         return done(error);
       }

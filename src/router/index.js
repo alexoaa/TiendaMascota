@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import axios from 'axios';
 import MainView from '@/views/MainView.vue';
 import AdminView from '@/views/AdminView.vue';
 import useUserStore from '@/stores/user';
@@ -13,7 +14,7 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   /* If the condition ends up not passing, we know that the route does require authentication.
   This means we should check the store for the user's authentication status.
   First, we need the store at the top of the router file.
@@ -22,6 +23,13 @@ router.beforeEach((to, from, next) => {
     next();
     return;
   }
+  try {
+    const response = await axios.get('/admin');
+    this.catalogo = response.data;
+  } catch (error) {
+    console.log(error);
+  }
+
   const store = useUserStore();
 
   if (store.userLoggedIn) {

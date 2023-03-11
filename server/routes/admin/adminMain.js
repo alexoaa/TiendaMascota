@@ -3,6 +3,11 @@ import { mysqlConnection } from '../../database.js';
 
 const router = Router();
 
+router.get('/', (req, res) => {
+  return res.send('Access to admin');
+});
+
+//? Access to activity log
 router.get('/activity-log', (req, res) => {
   const query = `SELECT id_registro_R AS ID_REGISTRO, DATE_FORMAT(DATE(fecha_R), '%d/%m/%Y') AS FECHA, TIME(fecha_R) AS HORA, u.nombre_U AS NOMBRE_USUARIO, u.id_U AS ID_USUARIO, accion_R AS ACCION, mascota_id_R AS IdMascota
   FROM registro

@@ -8,43 +8,42 @@ Content-Type: application/json
 
 ####
 
-GET http://localhost:5600/activity-log
+GET http://localhost:5600/admin/activity-log
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiMTY3Nzc5NjU4ODQ1OSIsInJvbGUiOiJhZG1pbiJ9LCJpYXQiOjE2Nzg0ODk2NTZ9.rgtY2hgirH6NFiHkBYnfsNUY25WHx2gSWk5gjkD8FxI
 
 {
-    "nombreCliente" : "Santi", 
-    "numeroTelefono" : 5510485859,
-    "segundoNumTel" : 5554301209,
-    "nombreMascota" : "Mora",
-    "razaMascota" : "Mestizo",
-    "servicio" : "Baño",
-    "precioServicio" : "200",
-    "fechaCita" : "2022-09-24",
-    "horaCita" : "18:30:00"
+    "id": "1677796588459",
+    "email": "alex00yt@gmail.com",
+    "role": "admin"
 }
 
 ####
 
-GET http://localhost:5500/admin/consulta-cita
+GET http://localhost:5600/admin
 Content-Type: application/json
-
-####
-
-POST http://localhost:5500/registrar
-Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiMTY3Nzc5NjU4ODQ1OSIsInJvbGUiOiJhZG1pbiJ9LCJpYXQiOjE2Nzg0ODk2NTZ9.rgtY2hgirH6NFiHkBYnfsNUY25WHx2gSWk5gjkD8FxI
 
 {
-    "nombre" : "Alejandro", 
-    "apellido" : "Olvera",
-    "telefono" : "5510485859",
-    "email" : "alex00yt@gmail.com",
-    "password" : "alex123",
-    "passwordConf" : "alex123"
+    "id": "1677796588459",
+    "email": "alex00yt@gmail.com",
+    "role": "admin"
 }
 
 ####
 
-POST http://localhost:5500/login
+POST http://localhost:5600/activity-log
+Content-Type: application/json
+
+{
+    "idUser": 2,
+    "tipo": "Adoptar"
+}
+
+
+####
+
+POST http://localhost:5600/login
 Content-Type: application/json
 
 {
@@ -54,7 +53,7 @@ Content-Type: application/json
 
 ####
 
-POST http://localhost:5500/registrar
+POST http://localhost:5600/registrar
 Content-Type: application/json
 
 {
@@ -67,7 +66,7 @@ Content-Type: application/json
 
 ####
 
-POST http://localhost:5500/login
+POST http://localhost:5600/login
 Content-Type: application/json
 
 {
